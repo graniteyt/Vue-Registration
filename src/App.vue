@@ -9,16 +9,15 @@
   <p>{{ Mail }}</p> -->
   <button @click="sign()">Регистрация</button>
 
-  <div className="output" v-for="(el, index) in users" :key="index">
-    <h3>{{ el.name }}</h3>
-    <p>{{ el.pass }} - <b>{{ el.mail }}</b></p>
-  </div>
+  <User v-for="(user, index) in users" :key="index" :user="user" :index="index" :deleteUser="deleteUser"/>
 
   <p className="error"> {{ error }}</p>
 </template>
 
 <script>
+import User from './components/User.vue'
 export default {
+  components: { User },
   data() {
     return {
       users: [],
@@ -33,16 +32,10 @@ export default {
     //   this.Name = val
     // }
     sign() {
-      if (this.Name == '') {
-          this.error = "Поле пустое!"
-          return;
-        } else if(this.Pass == '') {
-          this.error = "Поле пустое!"
-          return;
-        } else if(this.Mail == '') {
-          this.error = "Поле пустое!"
-          return;
-        }
+      if (this.Name === '' || this.Pass === '' || this.Mail === '') {
+        this.error = "Поле пустое!"
+        return;
+      }
 
       this.error = '';
 
@@ -51,6 +44,14 @@ export default {
         pass: this.Pass, 
         mail: this.Mail
       })
+
+      // Clear input fields after adding a user
+      this.Name = '';
+      this.Pass = '';
+      this.Mail = '';
+    },
+    deleteUser(index) {
+      this.users.splice(index, 1);
     }
   }
 }
@@ -93,12 +94,13 @@ button:hover {
 
 .output {
   margin-top: 10px;
-  padding: 5px;
+  padding: 15px;
   background-color: rgb(220, 220, 220);
   box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
   border-radius: 10px;
   font-size: 22px;
   width: auto;
+  border: 1px black solid;
   max-width: fit-content;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   transition: 0.5s;
